@@ -33,14 +33,19 @@
           </div>
           <p [innerHTML]="b.description"></p>
           <div>
-            <button
-              mat-flat-button
-              color="primary" id="wantToRead" aria-label="Want to Read" class="wantToRead"
-              (click)="addBookToReadingList(b)"
-              [disabled]="b.isAdded"
-            >
-              Want to Read
-            </button>
+            <button id="wantToRead" aria-label="Want to Read" class="wantToRead" *ngIf="!b.isAdded" 
+            mat-flat-button
+            color="primary"
+            (click)="addBookToReadingList(b)"
+          >
+            Want to Read
+          </button>
+          <button *ngIf="b.isAdded"
+            mat-flat-button
+            style="color:white"
+            color="primary" [disabled]="b?.finished"
+            (click)="removeFromReadingList(b)"
+          >{{b?.finished ? 'Finished': 'UNDO'}}</button>
           </div>
         </div>
       </div>
