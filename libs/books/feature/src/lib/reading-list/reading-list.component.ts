@@ -22,7 +22,7 @@ export class ReadingListComponent implements OnInit{
     this.store.dispatch(removeFromReadingList({ item }));
   }
   finished(book){
-    let item:ReadingListItem = {
+    const item:ReadingListItem = {
       'bookId':book.bookId,
       'finished' : true,
       'finishedDate': (new Date()).toISOString(),
@@ -35,7 +35,7 @@ export class ReadingListComponent implements OnInit{
     };
     this.store.dispatch(UpdateReadingList({ item }));
     this.readingList.map((x:any,i:number)=>{
-      if(x.bookId == item.bookId){
+      if(x.bookId === item.bookId){
         this.readingList[i] = item;
       }
     })

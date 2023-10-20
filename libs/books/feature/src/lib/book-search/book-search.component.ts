@@ -41,7 +41,7 @@ export class BookSearchComponent implements OnInit {
         this.readingList = list
         this.books.map((x:any,i:number)=>{
           this.readingList.map((y:any)=>{
-            if(x.id == y.bookId){
+            if(x.id === y.bookId){
               if(y?.finished){
                 this.books[i].finished = y?.finished;
               }
