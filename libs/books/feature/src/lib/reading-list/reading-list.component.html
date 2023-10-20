@@ -1,15 +1,24 @@
-<ng-container *ngIf="(readingList$ | async).length > 0; else empty">
-  <div class="reading-list-item" *ngFor="let b of readingList$ | async">
+<ng-container *ngIf="readingList.length > 0; else empty">
+  <div class="reading-list-item" *ngFor="let b of readingList">
     <div>
       <img class="reading-list-item--cover" [src]="b.coverUrl" />
     </div>
     <div class="reading-list-item--details">
       <strong class="reading-list-item--details--title">{{ b.title }}</strong>
       <div class="reading-list-item--details--author">
-        {{ b.authors.join(',') }}
+        {{ b?.authors?.join(',') }}
+      </div>
+      <div class="finished" *ngIf="b?.finished">
+        Finished on {{b.finishedDate | date : 'short'}}
       </div>
     </div>
     <div>
+      <button *ngIf="!b?.finished"
+        mat-icon-button class="finished-button"
+        (click)="finished(b)"
+      >
+        Finished
+      </button>
       <button
         mat-icon-button
         color="warn"

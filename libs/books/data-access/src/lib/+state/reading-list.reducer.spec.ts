@@ -1,65 +1,44 @@
-import * as ReadingListActions from './reading-list.actions';
-import {
-  initialState,
-  readingListAdapter,
-  reducer,
-  State
-} from './reading-list.reducer';
-import { createBook, createReadingListItem } from '@tmo/shared/testing';
+import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { UpdateReadingList, addToReadingList2, getReadingList, removeFromReadingList } from '@tmo/books/data-access';
+import { ReadingListItem } from '@tmo/shared/models';
 
-describe('Books Reducer', () => {
-  describe('valid Books actions', () => {
-    let state: State;
+@Component({
+  selector: 'tmo-reading-list',
+  templateUrl: './reading-list.component.html',
+  styleUrls: ['./reading-list.component.scss']
+})
+export class ReadingListComponent implements OnInit{
+  readingList: ReadingListItem[];
 
-    beforeEach(() => {
-      state = readingListAdapter.setAll(
-        [createReadingListItem('A'), createReadingListItem('B')],
-        initialState
-      );
-    });
+  constructor(private readonly store: Store) {}
+  ngOnInit(){
+    this.store.select(getReadingList).subscribe((item)=>{
+      this.readingList = item;
+    })
+  }
 
-    it('loadBooksSuccess should load books from reading list', () => {
-      const list = [
-        createReadingListItem('A'),
-        createReadingListItem('B'),
-        createReadingListItem('C')
-      ];
-      const action = ReadingListActions.loadReadingListSuccess({ list });
+  removeFromReadingList(item) {
+    this.store.dispatch(removeFromReadingList({ item }));
+  }
+  finished(book){
+    let item:ReadingListItem = {
+      'bookId':book.bookId,
+      'finished' : true,
+      'finishedDate': (new Date()).toISOString(),
+      'title': book.title,
+      'authors': book.authors,
+      'description': book.description,
+      'publisher': book?.publisher,
+      'publishedDate': book?.publishedDate,
+      'coverUrl': book?.coverUrl
+    };
+    this.store.dispatch(UpdateReadingList({ item }));
+    this.readingList.map((x:any,i:number)=>{
+      if(x.bookId == item.bookId){
+        this.readingList[i] = item;
+      }
+    })
+  }
 
-      const result: State = reducer(initialState, action);
-
-      expect(result.loaded).toBe(true);
-      expect(result.ids.length).toEqual(3);
-    });
-
-    it('failedAddToReadingList should undo book addition to the state', () => {
-      const action = ReadingListActions.failedAddToReadingList({
-        book: createBook('B')
-      });
-
-      const result: State = reducer(state, action);
-
-      expect(result.ids).toEqual(['A','B']);
-    });
-
-    it('failedRemoveFromReadingList should undo book removal from the state', () => {
-      const action = ReadingListActions.failedRemoveFromReadingList({
-        item: createReadingListItem('C')
-      });
-
-      const result: State = reducer(state, action);
-
-      expect(result.ids).toEqual(['A', 'B']);
-    });
-  });
-
-  describe('unknown action', () => {
-    it('should return the previous state', () => {
-      const action = {} as any;
-
-      const result = reducer(initialState, action);
-
-      expect(result).toEqual(initialState);
-    });
-  });
-});
+}
