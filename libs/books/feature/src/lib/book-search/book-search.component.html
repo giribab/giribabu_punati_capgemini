@@ -1,8 +1,8 @@
-<form [formGroup]="searchForm" (submit)="searchBooks()">
+<form [formGroup]="searchForm">
   <mat-form-field floatLabel="never">
     <input
       autoFocus
-      matInput
+      matInput (ngModelChange)="inputChange()"
       type="search"
       id="search"
       aria-label="Search-input"
