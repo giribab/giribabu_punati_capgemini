@@ -12,15 +12,16 @@ describe('When: I use the reading list feature', () => {
     );
   });
   it('Should change to finished',()=>{
-    const finished = true;
-    cy.visit('/your-page-url'); 
+    cy.visit('/your-page-url');
+    cy.get('input[placeholder="Search for books to add to your reading list"]').as('inputElement');
+    
+
+    const newValue = 'Java'; 
+    cy.get('@inputElement').type(newValue);
+    cy.get('form').submit();
+    cy.get('.wantToRead').eq(0).click();
+    cy.get('[data-testing="toggle-reading-list"]').click();
     const finishedButton = cy.get('.finished-button');
-    const finishedMessage = cy.get('.finished');
-    if (!finished) {
-      finishedButton.should('be.visible');
-      finishedMessage.should('not.exist');
-    } else { 
-      finishedButton.should('not.exist');
-    }
+    finishedButton.should('exist')
   })
 });
