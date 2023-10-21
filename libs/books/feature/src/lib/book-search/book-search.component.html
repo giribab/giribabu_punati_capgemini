@@ -4,10 +4,12 @@
       autoFocus
       matInput
       type="search"
+      id="search"
+      aria-label="Search-input"
       placeholder="Search for books to add to your reading list"
       formControlName="term"
     />
-    <button mat-icon-button matSuffix>
+    <button mat-icon-button matSuffix id="searchId" aria-label="Search Books Button">
       <mat-icon>search</mat-icon>
     </button>
   </mat-form-field>
@@ -33,7 +35,7 @@
           <div>
             <button
               mat-flat-button
-              color="primary"
+              color="primary" id="wantToRead" aria-label="Want to Read" class="wantToRead"
               (click)="addBookToReadingList(b)"
               [disabled]="b.isAdded"
             >
@@ -48,7 +50,7 @@
 <ng-template #empty>
   <div class="empty">
     <p>
-      Try searching for a topic, for example "<a (click)="searchExample()"
+      Try searching for a topic, for example "<a id="searchLink" (click)="searchExample()"
         >JavaScript</a
       >".
     </p>
