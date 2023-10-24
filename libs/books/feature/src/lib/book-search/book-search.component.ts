@@ -4,11 +4,12 @@ import {
   addToReadingList,
   clearSearch,
   getAllBooks,
+  getReadingList,
   ReadingListBook,
   searchBooks
 } from '@tmo/books/data-access';
 import { FormBuilder } from '@angular/forms';
-import { Book } from '@tmo/shared/models';
+import { Book, ReadingListItem } from '@tmo/shared/models';
 
 @Component({
   selector: 'tmo-book-search',
@@ -17,11 +18,13 @@ import { Book } from '@tmo/shared/models';
 })
 export class BookSearchComponent implements OnInit {
   books: ReadingListBook[];
+  readingList: ReadingListItem[];
+  
 
   searchForm = this.fb.group({
     term: ''
   });
-
+  
   constructor(
     private readonly store: Store,
     private readonly fb: FormBuilder
@@ -34,8 +37,21 @@ export class BookSearchComponent implements OnInit {
   ngOnInit(): void {
     this.store.select(getAllBooks).subscribe(books => {
       this.books = books;
+      this.store.select(getReadingList).subscribe(list=>{
+        this.readingList = list
+        this.books.map((x:any,i:number)=>{
+          this.readingList.map((y:any)=>{
+            if(x.id === y.bookId){
+              if(y?.finished){
+                this.books[i].finished = y?.finished;
+              }
+            }
+          })
+        })
+      });
     });
   }
+  
 
   formatDate(date: void | string) {
     return date

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { BooksDataAccessModule } from '@tmo/books/data-access';
 import { BookSearchComponent } from './book-search/book-search.component';
@@ -34,6 +34,7 @@ const EXPORTS = [
     BooksDataAccessModule
   ],
   exports: [...EXPORTS],
-  declarations: [...EXPORTS]
+  declarations: [...EXPORTS],
+  providers: [DatePipe],
 })
 export class BooksFeatureModule {}
